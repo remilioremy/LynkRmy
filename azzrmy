@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TikTok</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #121212;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .profile-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .profile-header {
+            padding-bottom: 20px;
+            border-bottom: 1px solid #333;
+        }
+
+        .profile-picture {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+
+        .username {
+            font-size: 24px;
+            margin: 10px 0 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .username .verified-badge {
+            color: #1DA1F2;
+            margin-left: 5px;
+            cursor: pointer;
+        }
+
+        .profile-stats {
+            display: flex;
+            justify-content: space-around;
+            padding: 20px 0;
+        }
+
+        .profile-stats .stat {
+            text-align: center;
+            flex: 1;
+        }
+
+        .profile-stats .stat:not(:last-child) {
+            border-right: 1px solid #333;
+        }
+
+        .stat strong {
+            display: block;
+            font-size: 18px;
+        }
+
+        .stat span {
+            font-size: 15px;
+            color: #bbb;
+        }
+
+        .profile-actions {
+            display: flex;
+            justify-content: center;
+            margin: 5px 0 5px 0;
+        }
+
+        .profile-actions button {
+            background-color: #1DA1F2;
+            border: none;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            margin: 0 10px;
+        }
+
+        .bio {
+            font-size: 16px;
+            color: #bbb;
+            margin-bottom: 5px;
+        }
+
+        .profile-videos {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .video {
+            width: calc(33.333% - 10px);
+        }
+
+        .video img {
+            width: 100%;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .tabs .tab {
+            margin: 0 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            font-size: 18px;
+            color: #bbb;
+        }
+
+        .tabs .tab i {
+            margin-right: 8px;
+        }
+
+        .tab-content {
+            display: none;
+            text-align: left;
+            padding-bottom: 20px;
+        }
+
+        #livechat iframe,
+        #shorts .embed {
+            padding-bottom: 20px;
+            border: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .shorts-embed {
+            margin-bottom: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .profile-actions button {
+                padding: 10px 18px;
+                font-size: 14px;
+            }
+
+            .tabs .tab {
+                font-size: 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .profile-actions button {
+                padding: 8px 16px;
+                font-size: 12px;
+            }
+
+            .tabs .tab {
+                font-size: 14px;
+            }
+        }
+
+        .swal2-popup {
+            background-color: #333 !important;
+            color: white !important;
+        }
+
+        .swal2-input,
+        .swal2-textarea {
+            background-color: #555 !important;
+            color: white !important;
+        }
+
+        .swal2-title {
+            color: white !important;
+        }
+
+        .swal2-html-container {
+            color: white !important;
+        }
+
+        .swal2-confirm {
+            background-color: #1DA1F2 !important;
+            color: white !important;
+        }
+
+        .swal2-cancel {
+            background-color: #FF6347 !important;
+            color: white !important;            
+        }
+    </style>
+</head>
+
+<body>
+    <div class="profile-container">
+        <header class="profile-header">
+            <img src="https://pomf2.lain.la/f/0brcswz.jpg" alt="Profile Picture" class="profile-picture">
+            <h1 class="username">@azzrmy <i class="fa fa-check-circle verified-badge"
+                    onclick="showVerifiedInfo()"></i></h1>
+            <div class="profile-stats">
+                <div class="stat">
+                    <strong id="following-count">1</strong>
+                    <span>Mengikuti</span>
+                </div>
+                <div class="stat">
+                    <strong id="followers-count">0</strong>
+                    <span>Pengikut</span>
+                </div>
+                <div class="stat">
+                    <strong id="like-count">1</strong>
+                    <span>Suka</span>
+                </div>
+            </div>
+            <div class="profile-actions">
+                <button id="follow-button" onclick="followUser()">Follow</button>
+                <button onclick="shareProfile()">Share</button>
+            </div>
+            <p class="bio">orang ini malas nulis bio nya sendiri.</p>
+        </header>
+        <div class="tabs">
+            <div class="tab" onclick="showTab('media')">
+                <i class="fa fa-image"></i> Media
+            </div>
+            <div class="tab" onclick="showTab('livechat')">
+                <i class="fa fa-message"></i> LiveChat
+            </div>
+            <div class="tab" onclick="showTab('shorts')">
+                <i class="fa fa-heart"></i> Favorite
+            </div>
+        </div>
+        <div id="media" class="tab-content">
+            <div class="profile-videos">
+                <a href="https://pomf2.lain.la/f/mw8jfit.mp4" target="_blank" class="video">
+                    <img src="https://pomf2.lain.la/f/q0e4ng65.jpg" alt="Video Thumbnail 1">
+                </a>
+            </div>
+        </div>
+        <div id="livechat" class="tab-content">
+            <iframe src="https://my.cbox.ws/USER-LIVECHAT" width="100%" height="500" frameborder="0"></iframe>
+        </div>
+        <div id="shorts" class="tab-content">
+            <div class="shorts-embed">
+    <div style="left: 0; width: 100%; height: 152px; position: relative;">
+        <iframe src="https://open.spotify.com/embed/track/5hx7w26Zi3zafMgvMTUqF6?utm_source=oembed"
+            style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;"
+            allowfullscreen allow="clipboard-write; encrypted-media; fullscreen; picture-in-picture;">
+        </iframe>
+    </div>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script type='text/javascript' src='https://assets.trakteer.id/js/trbtn-overlay.min.js'></script>
+    <script type='text/javascript' class='troverlay'>
+        (function () {
+            var trbtnId = trbtnOverlay.init('Dukung Saya di Trakteer', '#be1e2d', 'https://trakteer.id/remilioremy/tip/embed/modal', 'https://cdn.trakteer.id/images/embed/trbtn-icon.png?date=18-11-2023', '40', 'floating-left');
+            trbtnOverlay.draw(trbtnId);
+        })();
+    </script>
+    <script>
+        let followersCount = parseInt(localStorage.getItem('followersCount')) || 0;
+        const followButton = document.getElementById('follow-button');
+        const followersCountElem = document.getElementById('followers-count');
+
+        function updateFollowerCount() {
+            followersCountElem.innerText = followersCount.toLocaleString();
+        }
+
+        function followUser() {
+            if (followButton.innerText === 'Follow') {
+                Swal.fire({
+                    title: 'Follow',
+                    html: `
+                        <form id="follow-form">
+                            <input type="text" id="username" class="swal2-input" placeholder="Username" required>
+                            <input type="password" id="password" class="swal2-input" placeholder="Password" required>
+                        </form>
+                    `,
+                    confirmButtonText: 'Submit',
+                    showCancelButton: true,
+                    preConfirm: () => {
+                        const username = Swal.getPopup().querySelector('#username').value;
+                        const password = Swal.getPopup().querySelector('#password').value;
+                        if (!username || !password) {
+                            Swal.showValidationMessage('Please fill out all fields');
+                        }
+                        return { username, password };
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        followersCount++;
+                        localStorage.setItem('followersCount', followersCount);
+                        updateFollowerCount();
+                        followButton.innerText = 'Followed';
+                        localStorage.setItem('isFollowing', 'true');
+                    }
+                });
+            } else if (followButton.innerText === 'Followed') {
+                Swal.fire({
+                    title: 'Unfollow Confirmation',
+                    text: "Are you sure you want to unfollow?",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, unfollow',
+                    cancelButtonText: 'No, keep following'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        followersCount--;
+                        localStorage.setItem('followersCount', followersCount);
+                        updateFollowerCount();
+                        followButton.innerText = 'Follow';
+                        localStorage.removeItem('isFollowing');
+                    }
+                });
+            }
+        }
+
+        function shareProfile() {
+            const profileURL = window.location.href;
+            navigator.clipboard.writeText(profileURL).then(() => {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Profile link copied to clipboard!',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            }).catch(err => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Failed to copy profile link.',
+                    text: err,
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            });
+        }
+
+        function showVerifiedInfo() {
+            Swal.fire({
+                title: 'Verified Badge',
+                imageUrl: 'https://pomf2.lain.la/f/lzb7y14.png',
+                imageWidth: 150,
+                imageAlt: 'Verified Badge',
+                showConfirmButton: true,
+                confirmButtonText: 'OK',
+                position: 'top'
+            });
+        }
+
+        function showTab(tabId) {
+            localStorage.setItem('activeTab', tabId);
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(tabId).classList.add('active');
+        }
+        
+        window.onload = () => {
+            const savedTab = 'media';
+            showTab(savedTab);
+            updateFollowerCount();
+            if (localStorage.getItem('isFollowing') === 'true') {
+                followButton.innerText = 'Followed';
+            } else {
+                followButton.innerText = 'Follow';
+            }
+        };
+    </script>
+  </body>
+</html>
