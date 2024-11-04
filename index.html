@@ -249,6 +249,9 @@
                 <a href="#" onclick="showVideoPopup('https://pomf2.lain.la/f/4basis3l.mp4')" class="video">
                     <img src="https://pomf2.lain.la/f/86xm4j0v.jpg" alt="Video Thumbnail 1">
                 </a>
+                <a href="#" onclick="showVideoPopup('https://pomf2.lain.la/f/4xp8dg7h.mp4')" class="video">
+                    <img src="https://pomf2.lain.la/f/nq0e2nzl.png" alt="Video Thumbnail 1">
+                </a>
                 <a href="#" onclick="showVideoPopup('https://pomf2.lain.la/f/opis49f8.mp4')" class="video">
                     <img src="https://pomf2.lain.la/f/71dzv2lu.jpg" alt="Video Thumbnail 1">             
                 </a>
@@ -358,9 +361,7 @@
         function showVerifiedInfo() {
             Swal.fire({
                 title: 'Verified Badge',
-                imageUrl: 'https://pomf2.lain.la/f/lzb7y14.png',
-                imageWidth: 150,
-                imageAlt: 'Verified Badge',
+                icon: 'success',
                 showConfirmButton: true,
                 confirmButtonText: 'OK',
                 position: 'top'
@@ -385,7 +386,8 @@
         showCancelButton: false,
         confirmButtonText: 'Close'
     });
-            
+
+    // Menambahkan event listener untuk menutup SweetAlert saat video selesai
     document.getElementById('video-player').addEventListener('ended', () => {
         Swal.close();
     });
@@ -403,4 +405,4 @@
         };
     </script>
 </body>
-                </html>
+    </html>
